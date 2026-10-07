@@ -6,7 +6,7 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from google import genai
 
-# Render को एक्टिव रखने के लिए छोटा वेब सर्वर
+# Flask App (Render को 0.0.0.0 पर खुश रखने के लिए)
 flask_app = Flask('')
 
 @flask_app.route('/')
@@ -14,11 +14,12 @@ def home():
     return "Bot is Running 24/7!"
 
 def run_flask():
-    flask_app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
+    # यहाँ हम पोर्ट और होस्ट को पूरी तरह बाइंड कर रहे हैं ताकि Render इसे ढूंढ सके
+    port = int(os.environ.get('PORT', 8080))
+    flask_app.run(host='0.0.0.0', port=port)
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-# क्लाउड से चाबियां उठाना
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 
@@ -52,4 +53,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-  
